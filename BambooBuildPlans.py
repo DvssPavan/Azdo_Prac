@@ -61,7 +61,8 @@ class FTPlans:
         self.receiver_email = email
 
     def build(self):
-
+      
+        print(self.atlassian_user)
         user_pass = self.atlassian_user + ':' + self.atlassian_password
         base_64_val = base64.b64encode(user_pass.encode()).decode()
         bamboo_url = os.environ.get("http://bergamot3.lakes.ad:8085", "http://bergamot3.lakes.ad:8085")
