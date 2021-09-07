@@ -109,7 +109,7 @@ class FTPlans:
                         path = data.readlines()[1].strip().decode('utf-8')
                         path = path.replace('oak', 'oak.simba.ad')
                         print("path", path)
-                        self.get_logs(path)
+                        self.get_logs(path, base_64_val)
                 else:
                     print(self.build_configs[x] + ' agent is failed.')
                     return False
@@ -246,9 +246,13 @@ class FTPlans:
                 is_fail = False
         return not is_fail
 
-    def get_logs(self, file_path):
+    def get_logs(self, file_path, base_64_user_pass):
+        headers = {
+            'Authorization': "Basic " + base_64_user_pass
+        }
+        payload =""
         print ("generating Logs.....")
-        remotezip = urllib.request.urlopen(r"file:" + file_path + r"\log.zip")
+        remotezip = urllib.request.urlopen(r"file:" + file_path + r"\log.zip", data =payload,  headers =headers)
         zip = zipfile.ZipFile(remotezip)
         final_summary = []
         files = []
