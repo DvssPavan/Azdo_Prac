@@ -247,7 +247,7 @@ class FTPlans:
 
     def get_logs(self, file_path):
         print ("generating Logs.....")
-        remotezip = urllib.request.urlopen(r"file:" + file_path + r"\\log.zip")
+        remotezip = urllib.request.urlopen(r"file:" + file_path + r"\log.zip")
         zip = zipfile.ZipFile(remotezip)
         final_summary = []
         files = []
