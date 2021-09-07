@@ -247,12 +247,8 @@ class FTPlans:
         return not is_fail
 
     def get_logs(self, file_path, base_64_user_pass):
-        headers = {
-            'Authorization': "Basic " + base_64_user_pass
-        }
-        payload =""
         print ("generating Logs.....")
-        remotezip = urllib.request.urlopen(r"file:" + file_path + r"\log.zip", data =payload,  headers =headers)
+        remotezip = urllib.request.urlopen(r"file:" + file_path + r"\log.zip")
         zip = zipfile.ZipFile(remotezip)
         final_summary = []
         files = []
