@@ -71,9 +71,9 @@ class FTPlans:
         bamboo = Bamboo(url=bamboo_url, username=self.atlassian_user, password=self.atlassian_password)
 
         for x in range(len(self.build_configs)):
-            #project = self.projects[x]
-            #url = self.get_project_url(base_64_val, project)
-            #if not url == None:
+            project = self.projects[x]
+            url = self.get_project_url(base_64_val, project)
+            if not url == None:
             #    if len(self.build_configs[x]) > 2:
             #        branch_info = bamboo.get_branch_info(
             #            self.get_plan_key(url, base_64_val, self.build_configs[x]),
