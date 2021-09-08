@@ -71,23 +71,23 @@ class FTPlans:
         bamboo = Bamboo(url=bamboo_url, username=self.atlassian_user, password=self.atlassian_password)
 
         for x in range(len(self.build_configs)):
-            project = self.projects[x]
-            url = self.get_project_url(base_64_val, project)
-            if not url == None:
-                if len(self.build_configs[x]) > 2:
-                    branch_info = bamboo.get_branch_info(
-                        self.get_plan_key(url, base_64_val, self.build_configs[x]),
-                        self.branch_name)
-                branch_key = branch_info['key']
-                bamboo.execute_build(branch_key, **self.get_params())
-                print('Bamboo build is started for ' + str(self.build_configs[x]) +
-                      ' agent of ' + self.branch_name.split(' ')[0])
-                final_url, current_job_id = self.active_plan(branch_info['latestResult']['link']['href'], base_64_val)
-                self.open_browser(final_url)
+            #project = self.projects[x]
+            #url = self.get_project_url(base_64_val, project)
+            #if not url == None:
+            #    if len(self.build_configs[x]) > 2:
+            #        branch_info = bamboo.get_branch_info(
+            #            self.get_plan_key(url, base_64_val, self.build_configs[x]),
+            #            self.branch_name)
+            #    branch_key = branch_info['key']
+            #    bamboo.execute_build(branch_key, **self.get_params())
+            #    print('Bamboo build is started for ' + str(self.build_configs[x]) +
+            #          ' agent of ' + self.branch_name.split(' ')[0])
+            #    final_url, current_job_id = self.active_plan(branch_info['latestResult']['link']['href'], base_64_val)
+            #    self.open_browser(final_url)
 
 
-                #final_url = "http://bergamot3.lakes.ad:8085/rest/api/latest/result/TSTFOMEM-WIN2012R26464M107-37"
-                #current_job_id = 37
+                final_url = "http://bergamot3.lakes.ad:8085/rest/api/latest/result/TSTFOMEM-WIN2012R26464M107-37"
+                current_job_id = 40
 
                 status = self.status_of_agent(final_url)
 
