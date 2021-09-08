@@ -250,8 +250,8 @@ class FTPlans:
         print ("generating Logs.....")
         
         #remotezip = urllib.request.urlopen(r"file:" + file_path + r"\log.zip")
-        user1 = "magsw\\cpansuriya"
-        user_pass = user1 + ':' + self.outlook_password
+        user1 = "simba\\chintanp"
+        user_pass = user1 + ':' + self.atlassian_password
         base_64_val = base64.b64encode(user_pass.encode()).decode()
         
         url = r"file:" + file_path + r"\log.zip"
