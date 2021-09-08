@@ -74,20 +74,20 @@ class FTPlans:
             project = self.projects[x]
             url = self.get_project_url(base_64_val, project)
             if not url == None:
-                #if len(self.build_configs[x]) > 2:
-                #    branch_info = bamboo.get_branch_info(
-                #        self.get_plan_key(url, base_64_val, self.build_configs[x]),
-                #        self.branch_name)
-                #branch_key = branch_info['key']
-                #bamboo.execute_build(branch_key, **self.get_params())
-                #print('Bamboo build is started for ' + str(self.build_configs[x]) +
-                      #' agent of ' + self.branch_name.split(' ')[0])
-                #final_url, current_job_id = self.active_plan(branch_info['latestResult']['link']['href'], base_64_val)
-                #self.open_browser(final_url)
+                if len(self.build_configs[x]) > 2:
+                    branch_info = bamboo.get_branch_info(
+                        self.get_plan_key(url, base_64_val, self.build_configs[x]),
+                        self.branch_name)
+                branch_key = branch_info['key']
+                bamboo.execute_build(branch_key, **self.get_params())
+                print('Bamboo build is started for ' + str(self.build_configs[x]) +
+                      ' agent of ' + self.branch_name.split(' ')[0])
+                final_url, current_job_id = self.active_plan(branch_info['latestResult']['link']['href'], base_64_val)
+                self.open_browser(final_url)
 
 
-                final_url = "http://bergamot3.lakes.ad:8085/rest/api/latest/result/TSTFOMEM-WIN2012R26464M107-37"
-                current_job_id = 37
+                #final_url = "http://bergamot3.lakes.ad:8085/rest/api/latest/result/TSTFOMEM-WIN2012R26464M107-37"
+                #current_job_id = 37
 
                 status = self.status_of_agent(final_url)
 
@@ -97,8 +97,8 @@ class FTPlans:
                     # As Binscope test is a part of Compile plan for only `Windows` platform
                     # Logs Verification for Binscope should be done if and only if given Project Key is for Compile Plan and
                     # Platform is `Windows`
-                    #if status and project == 'BULDOMEM' and branch_info['shortKey'].startswith('WIN'):
-                    #   self.verify_binscope_log(branch_key, current_job_id, bamboo_url)
+                    if status and project == 'BULDOMEM' and branch_info['shortKey'].startswith('WIN'):
+                       self.verify_binscope_log(branch_key, current_job_id, bamboo_url)
 
                     if project == "TSTFOMEM":
                         print("99:- final_URL:- ", final_url.replace('rest/api/latest/result', 'browse') + "/artifact/JOB/Logs/build.txt")
