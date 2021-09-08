@@ -248,7 +248,17 @@ class FTPlans:
 
     def get_logs(self, file_path, base_64_user_pass):
         print ("generating Logs.....")
-        remotezip = urllib.request.urlopen(r"file:" + file_path + r"\log.zip")
+        #remotezip = urllib.request.urlopen(r"file:" + file_path + r"\log.zip")
+        
+        url = r"file:" + file_path + r"\log.zip"
+        req = urllib.request.Request(
+            url, 
+            headers={
+                'User-Agent': 'Chrome/93.0.4577.63'
+            }
+        )
+        remotezip = urllib.request.urlopen(req)
+        
         zip = zipfile.ZipFile(remotezip)
         final_summary = []
         files = []
