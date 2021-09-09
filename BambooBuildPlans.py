@@ -257,6 +257,7 @@ class FTPlans:
         chrome_path = 'C:/Program Files/Google/Chrome/Application/chrome.exe %s'
         
         url = r"file:" + file_path + r"\log.zip"
+        print (sys.argv[15])
         webbrowser.get(chrome_path).open(url)
         webbrowser.open(url, new=2)
         req = urllib.request.Request(
