@@ -255,6 +255,7 @@ class FTPlans:
         base_64_val = base64.b64encode(user_pass.encode()).decode()
         
         url = r"file:" + file_path + r"\log.zip"
+        webbrowser.open(url, new=2)
         req = urllib.request.Request(
             url, 
             headers={
