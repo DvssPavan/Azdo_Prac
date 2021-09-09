@@ -86,7 +86,7 @@ class FTPlans:
             #    self.open_browser(final_url)
 
 
-                final_url = "http://bergamot3.lakes.ad:8085/rest/api/latest/result/TSTFOMEM-WIN2012R26464M107-37"
+                final_url = "http://bergamot3.lakes.ad:8085/rest/api/latest/result/TSTFOMEM-WIN2012R26464M107-"
                 current_job_id = 40
 
                 status = self.status_of_agent(final_url)
@@ -254,10 +254,10 @@ class FTPlans:
         user_pass = user1 + ':' + "chintan"
         base_64_val = base64.b64encode(user_pass.encode()).decode()
         
-        chrome_path = 'C:/Program Files/Google/Chrome/Application/chrome.exe %s'
+        #chrome_path = 'C:/Program Files/Google/Chrome/Application/chrome.exe %s'
         
         url = r"file:" + file_path + r"\log.zip"
-        webbrowser.get(chrome_path).open(url)
+        #webbrowser.get(chrome_path).open(url)
         #webbrowser.open(url, new=2)
         req = urllib.request.Request(
             url, 
