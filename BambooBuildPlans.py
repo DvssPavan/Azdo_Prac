@@ -86,7 +86,7 @@ class FTPlans:
             #    self.open_browser(final_url)
 
 
-                final_url = "http://bergamot3.lakes.ad:8085/rest/api/latest/result/TSTFOMEM-WIN2012R26464M107-"
+                final_url = "http://bergamot3.lakes.ad:8085/rest/api/latest/result/TSTFOMEM-WIN2012R26464M107-40"
                 current_job_id = 40
 
                 status = self.status_of_agent(final_url)
@@ -248,7 +248,6 @@ class FTPlans:
 
     def get_logs(self, file_path, base_64_user_pass):
         print ("generating Logs.....")
-        print (sys.argv[15])
         
         #remotezip = urllib.request.urlopen(r"file:" + file_path + r"\log.zip")
         #user1 = "chintan"
