@@ -250,23 +250,23 @@ class FTPlans:
         print ("generating Logs.....")
         
         #remotezip = urllib.request.urlopen(r"file:" + file_path + r"\log.zip")
-        user1 = "chintan"
-        user_pass = user1 + ':' + "chintan"
-        base_64_val = base64.b64encode(user_pass.encode()).decode()
+        #user1 = "chintan"
+        #user_pass = user1 + ':' + "chintan"
+        #base_64_val = base64.b64encode(user_pass.encode()).decode()
         
         #chrome_path = 'C:/Program Files/Google/Chrome/Application/chrome.exe %s'
         
         url = r"file:" + file_path + r"\log.zip"
         #webbrowser.get(chrome_path).open(url)
         #webbrowser.open(url, new=2)
-        req = urllib.request.Request(
-            url, 
-            headers={
-                'User-Agent': 'Chrome/93.0.4577.63',
-                'Authorization': "Basic " + base_64_val
-            }
-        )
-        remotezip = urllib.request.urlopen(req)
+        #req = urllib.request.Request(
+        #    url, 
+        #    headers={
+        #        'User-Agent': 'Chrome/93.0.4577.63',
+        #        'Authorization': "Basic " + base_64_val
+        #    }
+        #)
+        remotezip = urllib.request.urlopen(url)
         
         zip = zipfile.ZipFile(remotezip)
         final_summary = []
