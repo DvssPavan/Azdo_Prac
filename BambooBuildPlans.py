@@ -390,7 +390,7 @@ class FTPlans:
 
 def run_bamboo_adapter_build(input_args: dict):
     print("Building driver/adapter on bamboo...BEGIN")
-    bamboo_build = FTPlans(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], input_args)
+    bamboo_build = FTPlans(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7], input_args)
     # run_build_driver_as_server(input_args)
     if bamboo_build.build():
         print("Please go through the logs generated on bamboo for further reference.")
