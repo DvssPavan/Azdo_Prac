@@ -1,9 +1,7 @@
 # Memphis Bamboo Build Plans 1.0
 # Author: ShubhamS
 """This module is responsible for triggering bamboo build plans for driver/adapter.
-
 This triggers the bamboo build plan.
-
   Typical usage example:
   $ python FTPlans.py
   And follow the on-screen instructions.
@@ -36,7 +34,7 @@ from atlassian import Bamboo
 
 class FTPlans:
 
-    def __init__(self,  username, password, outlook_username, outlook_password, email, input_args: dict):
+    def __init__(self, username, password, outlook_username, outlook_password, email, shared_folder_path, input_args: dict):
         self.input_args = input_args
         self.projects = input_args['inBambooConfigs']['inProjectKey']
         self.driver_label = input_args['inBambooConfigs']['inDriverLabel']
@@ -59,9 +57,10 @@ class FTPlans:
         self.outlook_username = outlook_username
         self.outlook_password = outlook_password
         self.receiver_email = email
+        self.shared_folder_path = shared_folder_path
 
     def build(self):
-      
+
         print(self.atlassian_user)
         user_pass = self.atlassian_user + ':' + self.atlassian_password
         base_64_val = base64.b64encode(user_pass.encode()).decode()
@@ -74,34 +73,34 @@ class FTPlans:
             project = self.projects[x]
             url = self.get_project_url(base_64_val, project)
             if not url == None:
-            #    if len(self.build_configs[x]) > 2:
-            #        branch_info = bamboo.get_branch_info(
-            #            self.get_plan_key(url, base_64_val, self.build_configs[x]),
-            #            self.branch_name)
-            #    branch_key = branch_info['key']
-            #    bamboo.execute_build(branch_key, **self.get_params())
-            #    print('Bamboo build is started for ' + str(self.build_configs[x]) +
-            #          ' agent of ' + self.branch_name.split(' ')[0])
-            #    final_url, current_job_id = self.active_plan(branch_info['latestResult']['link']['href'], base_64_val)
-            #    self.open_browser(final_url)
-
+                #    if len(self.build_configs[x]) > 2:
+                #        branch_info = bamboo.get_branch_info(
+                #            self.get_plan_key(url, base_64_val, self.build_configs[x]),
+                #            self.branch_name)
+                #    branch_key = branch_info['key']
+                #    bamboo.execute_build(branch_key, **self.get_params())
+                #    print('Bamboo build is started for ' + str(self.build_configs[x]) +
+                #          ' agent of ' + self.branch_name.split(' ')[0])
+                #    final_url, current_job_id = self.active_plan(branch_info['latestResult']['link']['href'], base_64_val)
+                #    self.open_browser(final_url)
 
                 final_url = "http://bergamot3.lakes.ad:8085/rest/api/latest/result/TSTFOMEM-WIN2012R26464M107-40"
                 current_job_id = 40
 
                 status = self.status_of_agent(final_url)
 
-                #print("status", status, "     ", project[:3] == "TST")
+                # print("status", status, "     ", project[:3] == "TST")
 
                 if status == True or project[:3] == "TST":
                     # As Binscope test is a part of Compile plan for only `Windows` platform
                     # Logs Verification for Binscope should be done if and only if given Project Key is for Compile Plan and
                     # Platform is `Windows`
                     if status and project == 'BULDOMEM' and branch_info['shortKey'].startswith('WIN'):
-                       self.verify_binscope_log(branch_key, current_job_id, bamboo_url)
+                        self.verify_binscope_log(branch_key, current_job_id, bamboo_url)
 
                     if project == "TSTFOMEM":
-                        print("99:- final_URL:- ", final_url.replace('rest/api/latest/result', 'browse') + "/artifact/JOB/Logs/build.txt")
+                        print("99:- final_URL:- ",
+                              final_url.replace('rest/api/latest/result', 'browse') + "/artifact/JOB/Logs/build.txt")
                         data = urllib.request.urlopen(
                             final_url.replace('rest/api/latest/result', 'browse')
                             + "/artifact/JOB/Logs/build.txt")
@@ -200,7 +199,7 @@ class FTPlans:
         current_job_id = 1
         while is_exist:
             id_list = url.split('-')
-            job_id = int(id_list[-1])+1
+            job_id = int(id_list[-1]) + 1
             url = url[0: len(url) - len(id_list[-1])] + str(job_id)
             payload = ""
             headers = {
@@ -237,7 +236,7 @@ class FTPlans:
                 response = requests.request("GET", url)
                 tree = et.fromstring(response.content)
             elif tree.attrib.get('successful') == "false":
-                print ("Plan is Failed")
+                print("Plan is Failed")
                 status = False
                 is_fail = True
             elif tree.attrib.get('successful') == "true":
@@ -247,27 +246,11 @@ class FTPlans:
         return not is_fail
 
     def get_logs(self, file_path, base_64_user_pass):
-        print ("generating Logs.....")
-        
-        #remotezip = urllib.request.urlopen(r"file:" + file_path + r"\log.zip")
-        user1 = "magsw\\" + self.atlassian_user
-        user_pass = user1 + ':' + self.atlassian_password
-        base_64_val = base64.b64encode(user_pass.encode()).decode()
-        
-        chrome_path = 'C:/Program Files/Google/Chrome/Application/chrome.exe %s'
-        
-        url = r"file:" + file_path + r"\log.zip"
+        print("generating Logs.....")
 
-        #webbrowser.get(chrome_path).open(url)
-        req = urllib.request.Request(
-            url, 
-            headers={
-                'User-Agent': 'Chrome/93.0.4577.63',
-                'Authorization': "Basic " + base_64_val
-            }
-        )
-        remotezip = urllib.request.urlopen(req)
-        
+        remotezip = self.shared_folder_path + file_path[file_path.find("archive\\") + 7:] + "\\log.zip"
+
+
         zip = zipfile.ZipFile(remotezip)
         final_summary = []
         files = []
@@ -279,7 +262,7 @@ class FTPlans:
 
                 all_summary = open(filename, "w+")
 
-                #print(fn)
+                # print(fn)
                 with zip.open(fn, 'r') as infile:
                     csv_list = []
                     reader = csv.reader(TextIOWrapper(infile, 'utf-8'))
@@ -289,18 +272,17 @@ class FTPlans:
 
                     field = csv_list[0][1:]
                     summary = csv_list[-1][1:]
-                    #print(field)
-                    #print(summary)
+                    # print(field)
+                    # print(summary)
 
                     if len(final_summary) == 0:
                         final_summary = summary
                     else:
                         for i in range(len(summary)):
                             final_summary[i] = int(final_summary[i]) + int(summary[i])
-                    #print(final_summary)
+                    # print(final_summary)
         for i in range(len(field)):
             all_summary.write(field[i] + ":-" + str(final_summary[i]) + "\n")
-
 
         all_Log_Files = []
         for fn in zip.namelist():
@@ -309,7 +291,7 @@ class FTPlans:
                 file = file.split('----------------------------------------------------------------------')
                 all_Log_Files.append(file[1:])
 
-        #print(all_Log_Files[0][1])
+        # print(all_Log_Files[0][1])
 
         count1 = 0
         for fn in zip.namelist():
@@ -325,10 +307,10 @@ class FTPlans:
                 for row in reader:
                     if row[0] == 'Result':
                         continue
-                    #print("-----", row[0], row[4], row[5], count1, count2, fn)
+                    # print("-----", row[0], row[4], row[5], count1, count2, fn)
                     if row[0] == "FAILED_STARTUP" or row[0] == "FAILED":
-                        #print(row[0], row[4], row[5], count1, count2, fn)
-                        #print(all_Log_Files[count1][count2])
+                        # print(row[0], row[4], row[5], count1, count2, fn)
+                        # print(all_Log_Files[count1][count2])
                         all_summary.write(all_Log_Files[count1][count2])
                         all_summary.write('----------------------------------------------------------------------')
                     count2 += 1
