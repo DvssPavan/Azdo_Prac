@@ -1,6 +1,6 @@
 {
     "inBambooConfigs": {
-        "inProjectKey":["BULDOMEM","PKGOOMEM","TSTFOMEM"],
+        "inProjectKey":["BULDOMEM","TSTFOMEM"],
         "inDriverLabel":"Jira_ODBC_1.6.34.1013__CL786784",
         "inCoreLabel":"Memphis_Core_ODBC_1.6.34.1039",
         "inSENLabel":"SimbaEngineSDK_10.1.20.1180_Internal",
@@ -10,8 +10,8 @@
         "inMemoryTest": "",
         "inRetail": "",
         "inAppVerifier": "",
-        "inTestSuiteList": "Jira",
-        "inBuildConfigs": ["w2012r2 vs2013 64","w2012r2 vs2013 zip","w2012r2 x64 64"],
+        "inTestSuiteList": "JiraIntegration",
+        "inBuildConfigs": ["w2012r2 vs2013 64","w2012r2 x64 64"],
         "inBranchName": "Jira 1.6",
         "inCompiler": "vs2013",
         "inInsightDesktopLabel": "",
