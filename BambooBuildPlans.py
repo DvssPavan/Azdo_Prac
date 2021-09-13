@@ -1,23 +1,17 @@
-# Memphis Bamboo Build Plans 1.0
-# Author: ShubhamS
-"""This module is responsible for triggering bamboo build plans for driver/adapter.
-This triggers the bamboo build plan.
+"""This module is responsible for triggering bamboo build plans for Compile, OEM and FT plans.
   Typical usage example:
-  $ python FTPlans.py
-  And follow the on-screen instructions.
+  $ python FTPlans.py <CommandLineArgs>
 """
 import os
 from json import load
 
 import requests
-import getpass
 import base64
 import xml.etree.cElementTree as et
 import webbrowser
 import time
 import urllib
 import zipfile
-from zipfile import ZipFile
 
 import csv
 from io import TextIOWrapper
@@ -28,13 +22,12 @@ from email.mime.text import MIMEText
 from email.utils import formatdate
 import smtplib
 from os.path import basename
-
 from atlassian import Bamboo
-
 
 class FTPlans:
 
-    def __init__(self, username, password, outlook_username, outlook_password, email, shared_folder_path, input_args: dict):
+    def __init__(self, username, password, outlook_username, outlook_password, email, shared_folder_path,
+                 input_args: dict):
         self.input_args = input_args
         self.projects = input_args['inBambooConfigs']['inProjectKey']
         self.driver_label = input_args['inBambooConfigs']['inDriverLabel']
@@ -61,7 +54,6 @@ class FTPlans:
 
     def build(self):
 
-        print(self.atlassian_user)
         user_pass = self.atlassian_user + ':' + self.atlassian_password
         base_64_val = base64.b64encode(user_pass.encode()).decode()
         bamboo_url = os.environ.get("http://bergamot3.lakes.ad:8085", "http://bergamot3.lakes.ad:8085")
@@ -85,8 +77,6 @@ class FTPlans:
 
                 status = self.status_of_agent(final_url)
 
-                # print("status", status, "     ", project[:3] == "TST")
-
                 if status == True or project[:3] == "TST":
                     # As Binscope test is a part of Compile plan for only `Windows` platform
                     # Logs Verification for Binscope should be done if and only if given Project Key is for Compile Plan and
@@ -94,17 +84,15 @@ class FTPlans:
                     if status and project == 'BULDOMEM' and branch_info['shortKey'].startswith('WIN'):
                         self.verify_binscope_log(branch_key, current_job_id, bamboo_url)
 
+                    # Generate logs if plan is FT
                     if project == "TSTFOMEM":
-                        print("99:- final_URL:- ",
-                              final_url.replace('rest/api/latest/result', 'browse') + "/artifact/JOB/Logs/build.txt")
                         data = urllib.request.urlopen(
                             final_url.replace('rest/api/latest/result', 'browse')
                             + "/artifact/JOB/Logs/build.txt")
 
                         path = data.readlines()[1].strip().decode('utf-8')
                         path = path.replace('oak', 'oak.simba.ad')
-                        print("path", path)
-                        self.get_logs(path, base_64_val)
+                        self.get_logs(path)
                 else:
                     print(self.build_configs[x] + ' agent is failed.')
                     return False
@@ -182,14 +170,20 @@ class FTPlans:
             "INSIGHT_DESKTOP_LABEL": self.insight_desktop_label if self.insight_desktop_label != "" else "",
             "INSIGHT_BRANCH": self.insight_branch if self.insight_branch != "" else ""
         }
+
         params1 = {}
+
+        # consider only non empty parameters.
         for i in params.keys():
             if params[i] != "":
                 params1[i] = params[i]
         return params1
 
     def active_plan(self, url: str, base_64_user_pass):
-        # return plan url and active plan id
+        """
+        return plan url and active plan id
+        """
+
         is_exist = True
         final_url = url
         current_job_id = 1
@@ -211,12 +205,11 @@ class FTPlans:
                 is_exist = False
         return final_url, current_job_id
 
-    def open_browser(self, url: str):
-        url = url.replace('rest/api/latest/result', 'browse')
-        webbrowser.open(url, new=2)
-
     def status_of_agent(self, url: str):
-        # return status of agent
+        """
+        return status of agent
+        """
+
         response = requests.request("GET", url)
         tree = et.fromstring(response.content)
 
@@ -241,11 +234,15 @@ class FTPlans:
                 is_fail = False
         return not is_fail
 
-    def get_logs(self, file_path, base_64_user_pass):
+    def get_logs(self, file_path):
+        """
+        scrap logs from log.zip folder and generate final logs.
+        """
+
         print("generating Logs.....")
 
+        # path of logs folder
         remotezip = self.shared_folder_path + file_path[file_path.find("archive\\") + 7:] + "\\log.zip"
-
 
         zip = zipfile.ZipFile(remotezip)
         final_summary = []
@@ -258,7 +255,6 @@ class FTPlans:
 
                 all_summary = open(filename, "w+")
 
-                # print(fn)
                 with zip.open(fn, 'r') as infile:
                     csv_list = []
                     reader = csv.reader(TextIOWrapper(infile, 'utf-8'))
@@ -268,18 +264,16 @@ class FTPlans:
 
                     field = csv_list[0][1:]
                     summary = csv_list[-1][1:]
-                    # print(field)
-                    # print(summary)
 
                     if len(final_summary) == 0:
                         final_summary = summary
                     else:
                         for i in range(len(summary)):
                             final_summary[i] = int(final_summary[i]) + int(summary[i])
-                    # print(final_summary)
         for i in range(len(field)):
             all_summary.write(field[i] + ":-" + str(final_summary[i]) + "\n")
 
+        # store results of all testcases
         all_Log_Files = []
         for fn in zip.namelist():
             if fn.endswith("_verbose.log"):
@@ -287,8 +281,7 @@ class FTPlans:
                 file = file.split('----------------------------------------------------------------------')
                 all_Log_Files.append(file[1:])
 
-        # print(all_Log_Files[0][1])
-
+        # display only failed testcases results.
         count1 = 0
         for fn in zip.namelist():
             if fn.endswith("TestSuite__summary.csv"):
@@ -303,10 +296,7 @@ class FTPlans:
                 for row in reader:
                     if row[0] == 'Result':
                         continue
-                    # print("-----", row[0], row[4], row[5], count1, count2, fn)
                     if row[0] == "FAILED_STARTUP" or row[0] == "FAILED":
-                        # print(row[0], row[4], row[5], count1, count2, fn)
-                        # print(all_Log_Files[count1][count2])
                         all_summary.write(all_Log_Files[count1][count2])
                         all_summary.write('----------------------------------------------------------------------')
                     count2 += 1
@@ -318,6 +308,10 @@ class FTPlans:
         self.send_mail(files)
 
     def send_mail(self, attachments):
+        """
+        send final logs in mail
+        """
+
         SERVER = "smtp-mail.outlook.com"
         FROM = "cpansuriya@magnitude.com"
         TO = [self.receiver_email]  # must be a list
@@ -350,11 +344,11 @@ class FTPlans:
         server.sendmail(FROM, TO, msg.as_string())
         server.quit()
 
-        """ % (FROM, ", ".join(TO), SUBJECT, TEXT) """
-
-        # Send the mail
-
     def verify_binscope_log(self, branch_key, build_number, bamboo_url):
+        """
+        return binscope logs in console
+        """
+
         build_log_url = bamboo_url + '/download/' + branch_key + '-JOB/build_logs/' + branch_key + '-JOB-' + str(
             build_number) + '.log'
         build_log = requests.get(build_log_url)
