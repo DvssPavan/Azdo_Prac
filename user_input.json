@@ -10,7 +10,7 @@
         "inMemoryTest": "",
         "inRetail": "",
         "inAppVerifier": "",
-        "inTestSuiteList": "JiraIntegration",
+        "inTestSuiteList": "Jira, JiraIntegration",
         "inBuildConfigs": ["w2012r2 vs2013 64","w2012r2 x64 64"],
         "inBranchName": "Jira 1.6",
         "inCompiler": "vs2013",
