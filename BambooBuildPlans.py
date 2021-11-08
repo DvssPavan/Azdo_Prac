@@ -209,7 +209,7 @@ class FTPlans:
         """
         return status of agent
         """
-
+        print(url)
         response = requests.request("GET", url)
         tree = et.fromstring(response.content)
 
