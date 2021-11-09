@@ -91,6 +91,7 @@ class FTPlans:
                             + "/artifact/JOB/Logs/build.txt")
 
                         path = data.readlines()[1].strip().decode('utf-8')
+                        path = "\\\\oak\\build_archives\\archive\\TSTFOMEM-WIN2012R26464M105\\9"
                         path = path.replace('oak', 'oak.simba.ad')
                         self.get_logs(path)
                 else:
