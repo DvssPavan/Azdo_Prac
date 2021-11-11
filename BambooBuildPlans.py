@@ -263,14 +263,15 @@ class FTPlans:
                         print(row)
                         csv_list.append(row)
                     print(csv_list)
-                    field = csv_list[0][1:]
-                    summary = csv_list[-1][1:]
+                    if(csv_list[0])
+                        field = csv_list[0][1:]
+                        summary = csv_list[-1][1:]
 
-                    if len(final_summary) == 0:
-                        final_summary = summary
-                    else:
-                        for i in range(len(summary)):
-                            final_summary[i] = int(final_summary[i]) + int(summary[i])
+                        if len(final_summary) == 0:
+                            final_summary = summary
+                        else:
+                            for i in range(len(summary)):
+                                final_summary[i] = int(final_summary[i]) + int(summary[i])
         for i in range(len(field)):
             all_summary.write(field[i] + ":-" + str(final_summary[i]) + "\n")
 
