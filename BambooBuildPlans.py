@@ -263,7 +263,7 @@ class FTPlans:
                         print(row)
                         csv_list.append(row)
                     print(csv_list)
-                    if(csv_list[0]):
+                    if(len(csv_list)):
                         field = csv_list[0][1:]
                         summary = csv_list[-1][1:]
 
