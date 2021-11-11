@@ -299,6 +299,12 @@ class FTPlans:
                     if row[0] == 'Result':
                         continue
                     if row[0] == "FAILED_STARTUP" or row[0] == "FAILED":
+                        print("------------------All logs ============")
+                        print(all_Log_Files)
+                        print(count1)
+                        print(count2)
+                        print(all_Log_Files[count1][count2])
+                        print("------------------All logs end --------------")
                         all_summary.write(all_Log_Files[count1][count2])
                         all_summary.write('----------------------------------------------------------------------')
                     count2 += 1
