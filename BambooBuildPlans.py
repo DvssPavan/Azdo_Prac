@@ -260,8 +260,9 @@ class FTPlans:
                     reader = csv.reader(TextIOWrapper(infile, 'utf-8'))
                     for row in reader:
                         # process the CSV here
+                        print(row)
                         csv_list.append(row)
-
+                    print(csv)
                     field = csv_list[0][1:]
                     summary = csv_list[-1][1:]
 
