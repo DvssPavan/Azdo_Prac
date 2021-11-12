@@ -305,8 +305,9 @@ class FTPlans:
                         print(count2)
                         print(all_Log_Files[count1][count2])
                         print("------------------All logs end --------------")
-                        all_summary.write(all_Log_Files[count1][count2])
-                        all_summary.write('----------------------------------------------------------------------')
+                        if(len(all_Log_files[count1])):
+                            all_summary.write(all_Log_Files[count1][count2])
+                            all_summary.write('----------------------------------------------------------------------')
                     count2 += 1
                 count1 += 1
         if (os.stat(all_summary.name).st_size > 0):
