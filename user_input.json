@@ -1,6 +1,6 @@
 {
     "inBambooConfigs": {
-        "inProjectKey":["TSTFOMEM"],
+        "inProjectKey":["BULDOMEM","PKGOOMEM","TSTFOMEM"],
         "inDriverLabel":"Marketo_ODBC_1.6.43.1019",
         "inCoreLabel":"Memphis_Core_ODBC_1.6.43.1048",
         "inSENLabel":"SimbaEngineSDK_10.1.23.1193",
