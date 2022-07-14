@@ -111,7 +111,7 @@ class FTPlans:
             'Authorization': "Basic " + base_64_user_pass,
             'Accept': "application/json"
         }
-
+        print("GetPlanKeyURL "+url)
         response = requests.request("GET", url, data=payload, headers=headers)
         tree = response.json()  # response format make as a json
 
@@ -138,6 +138,7 @@ class FTPlans:
     def get_project_url(self, base_64_user_pass, project):
         url = "http://bergamot3.lakes.ad:8085/rest/api/latest/project/"
         url += project
+        print("GetProjectURL "+url)
         payload = ""
         headers = {
             'Authorization': "Basic " + base_64_user_pass
