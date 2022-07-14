@@ -324,7 +324,7 @@ class FTPlans:
         """
         print("Sending mail")
         SERVER = "smtp-mail.outlook.com"
-        FROM = "cpansuriya@magnitude.com"
+        FROM = "pavan.cheemakurthi@insightsoftware.com"
         TO = [self.receiver_email]  # must be a list
 
         # Prepare actual message
@@ -351,7 +351,7 @@ class FTPlans:
         server.ehlo()
         server.starttls()
         server.ehlo()
-        server.login("cpansuriya@magsw.com", self.outlook_password)
+        server.login("pavan.cheemakurthi@insightsoftware.com", self.outlook_password)
         server.sendmail(FROM, TO, msg.as_string())
         server.quit()
 
