@@ -64,6 +64,7 @@ class FTPlans:
         for x in range(len(self.build_configs)):
             project = self.projects[x]
             url = self.get_project_url(base_64_val, project)
+            print(url)
             if not url == None:
                 if len(self.build_configs[x]) > 2:
                     branch_info = bamboo.get_branch_info(
@@ -210,6 +211,7 @@ class FTPlans:
         """
         return status of agent
         """
+        print("Inside status of Agent")
         print(url)
         response = requests.request("GET", url)
         tree = et.fromstring(response.content)
@@ -320,7 +322,7 @@ class FTPlans:
         """
         send final logs in mail
         """
-
+        print("Sending mail")
         SERVER = "smtp-mail.outlook.com"
         FROM = "cpansuriya@magnitude.com"
         TO = [self.receiver_email]  # must be a list
@@ -357,7 +359,7 @@ class FTPlans:
         """
         return binscope logs in console
         """
-
+        print("Verifying binscope logs")
         build_log_url = bamboo_url + '/download/' + branch_key + '-JOB/build_logs/' + branch_key + '-JOB-' + str(
             build_number) + '.log'
         build_log = requests.get(build_log_url)
@@ -385,6 +387,7 @@ class FTPlans:
             print('\n'.join(binscope_content))
         else:
             print('Build Logs Download Failed!')
+ 
 
 
 def run_bamboo_adapter_build(input_args: dict):
