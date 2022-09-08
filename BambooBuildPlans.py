@@ -246,7 +246,7 @@ class FTPlans:
 
         # path of logs folder
         remotezip = self.shared_folder_path + file_path[file_path.find("\\archive\\"):] + "\\log.zip"
-
+        print(remotezip)
         zip = zipfile.ZipFile(remotezip)
         final_summary = []
         files = []
