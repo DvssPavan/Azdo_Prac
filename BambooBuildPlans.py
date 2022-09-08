@@ -77,7 +77,6 @@ class FTPlans:
                     final_url, current_job_id = self.active_plan(branch_info['latestResult']['link']['href'], base_64_val)
 
                 status = self.status_of_agent(final_url)
-
                 if status == True or project[:3] == "TST":
                     # As Binscope test is a part of Compile plan for only `Windows` platform
                     # Logs Verification for Binscope should be done if and only if given Project Key is for Compile Plan and
@@ -243,9 +242,10 @@ class FTPlans:
         """
 
         print("generating Logs.....")
-
+        
         # path of logs folder
         remotezip = self.shared_folder_path + file_path[file_path.find("\\archive\\"):] + "\\log.zip"
+        #remotezip = 'Z:\\archive\\TSTFOMEM-WIN2012R26464M104\\47\\log.zip'
         print(remotezip)
         zip = zipfile.ZipFile(remotezip)
         final_summary = []
@@ -282,6 +282,7 @@ class FTPlans:
         all_Log_Files = []
         for fn in zip.namelist():
             if fn.endswith("_verbose.log"):
+                print(fn)
                 file = zip.read(fn).decode("utf-8")
                 file = file.split('----------------------------------------------------------------------')
                 all_Log_Files.append(file[1:])
@@ -289,7 +290,7 @@ class FTPlans:
         # display only failed testcases results.
         count1 = 0
         for fn in zip.namelist():
-            if fn.endswith("TestSuite__summary.csv"):
+            if fn.endswith("__summary.csv"):
                 print(fn)
                 count2 = 0
                 file = zip.open(fn, 'r')
@@ -316,7 +317,7 @@ class FTPlans:
             files.append(filename)
         all_summary.close()
 
-        self.send_mail(files)
+        #self.send_mail(files)
 
     def send_mail(self, attachments):
         """
